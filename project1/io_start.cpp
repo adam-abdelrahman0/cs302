@@ -30,9 +30,7 @@ struct Artist {
 
 int main(int argc, char* argv[]) {
     ifstream musicFile;
-    string line, currentLineString, currentTempString; 
-    // use currentLineString for the section (one of six) of the current line parse (ex. song name vs. song duration, split by space)
-    // use currentTempString for parsing within currentLineString (ex. song name, split by '_')
+    string line, currentLineString, artistName, albumName, songName;
     int curTime;
 
     vector<Song> tempSongs;
@@ -40,7 +38,7 @@ int main(int argc, char* argv[]) {
 
     musicFile.open(argv[1]);
 
-    while (musicFile) {
+    while (!musicFile.eof()) {
         Song currentSong;
 
         getline(musicFile, line);
@@ -50,25 +48,27 @@ int main(int argc, char* argv[]) {
         ss << line;
 
         // song title
-        getline(ss, currentLineString, ' ');
-        replace(currentLineString.begin(), currentLineString.end(), '_', ' ');
-        currentSong.title = currentLineString;
+        getline(ss, songName, ' ');
+        replace(songName.begin(), songName.end(), '_', ' ');
+        currentSong.title = songName;
 
-        // song duration
+        // song duration (TODO: convert to total seconds)
         getline(ss, currentLineString, ' ');
         currentSong.time = currentLineString;
 
         // song artist (add song to album and album to artist)
-        getline(ss, currentLineString, ' ');
+        getline(ss, artistName, ' ');
+        replace(artistName.begin(), artistName.end(), '_', ' ');
 
-        artists[currentLineString].name = currentLineString;
-        //artists[currentLineString].time = currentSong.time;
-        artists[currentLineString].nsongs++;
+        artists[artistName].name = artistName;
+        //artists[currentLineString].time += currentSong.time;
+        artists[artistName].nsongs++;
 
-        getline(ss, currentTempString, ' ');
-        artists[currentLineString].albums[currentTempString].name = currentTempString;
+        getline(ss, albumName, ' ');
+        replace(albumName.begin(), albumName.end(), '_', ' ');
+        artists[artistName].albums[albumName].name = albumName;
         //artists[currentLineString].albums[currentTempString].time = currentSong.time;
-        artists[currentLineString].albums[currentTempString].nsongs++;
+        artists[artistName].albums[albumName].nsongs++;
 
         //artists[currentLineString].albums[currentTempString].songs[currentSong.title].title = currentSong.title;
         //artists[currentLineString].albums[currentTempString].songs[currentSong.title].time = currentSong.time;
@@ -84,8 +84,11 @@ int main(int argc, char* argv[]) {
     cout << "\n\n---------- testing structs ----------\n\n" << endl;
     
     for (auto itr = artists.begin(); itr != artists.end(); ++itr) {
-        cout << '\t' << itr->first << '\t' << itr->second.name
-             << '\n';
+        cout << itr->first << ": " << itr->second.nsongs << ", " << endl;
+
+        for (auto albumsItr = itr->second.albums.begin(); albumsItr != itr->second.albums.end(); ++albumsItr) {
+            cout << "\t" << albumsItr->first << ": " << albumsItr->second.nsongs << endl;
+        }
     }
     musicFile.close();
 
