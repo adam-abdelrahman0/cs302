@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 #include <map>
 
 using namespace std;
@@ -29,7 +30,9 @@ struct Artist {
 
 int main(int argc, char* argv[]) {
     ifstream musicFile;
-    string line, currentString;
+    string line, currentLineString, currentTempString; 
+    // use currentLineString for the section (one of six) of the current line parse (ex. song name vs. song duration, split by space)
+    // use currentTempString for parsing within currentLineString (ex. song name, split by '_')
     int curTime;
 
     vector<Song> tempSongs;
@@ -41,15 +44,16 @@ int main(int argc, char* argv[]) {
 
         getline(musicFile, line);
 
+        // get full line from file to split whitespace
         stringstream ss;
-
         ss << line;
 
-        getline(ss, currentString, ' ');
-        currentSong.title = currentString;
+        getline(ss, currentLineString, ' ');
+        replace(currentLineString.begin(), currentLineString.end(), '_', ' ');
+        currentSong.title = currentLineString;
 
-        getline(ss, currentString, ' ');
-        currentSong.time = currentString;
+        getline(ss, currentLineString, ' ');
+        currentSong.time = currentLineString;
 
         tempSongs.push_back(currentSong);
     }
