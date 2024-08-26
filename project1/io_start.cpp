@@ -15,7 +15,7 @@ struct Song {
 };
 
 struct Album {
-    map <int, Song > songs;
+    map <string, Song > songs;
     string name;
     int time;
     int nsongs;
@@ -30,8 +30,7 @@ struct Artist {
 
 int main(int argc, char* argv[]) {
     ifstream musicFile;
-    string line, currentLineString, artistName, albumName, songName;
-    int curTime;
+    string line, currentLineString, artistName, albumName, songName, trackNum;
 
     vector<Song> tempSongs;
     map<string, Artist> artists;
@@ -70,8 +69,12 @@ int main(int argc, char* argv[]) {
         //artists[currentLineString].albums[currentTempString].time = currentSong.time;
         artists[artistName].albums[albumName].nsongs++;
 
-        //artists[currentLineString].albums[currentTempString].songs[currentSong.title].title = currentSong.title;
-        //artists[currentLineString].albums[currentTempString].songs[currentSong.title].time = currentSong.time;
+        getline(ss, currentLineString, ' ');
+        getline(ss, currentLineString, ' ');
+        trackNum = currentLineString;
+
+        artists[artistName].albums[albumName].songs[trackNum].title = currentSong.title;
+        artists[artistName].albums[albumName].songs[trackNum].time = currentSong.time;
 
 
         tempSongs.push_back(currentSong);
@@ -88,6 +91,10 @@ int main(int argc, char* argv[]) {
 
         for (auto albumsItr = itr->second.albums.begin(); albumsItr != itr->second.albums.end(); ++albumsItr) {
             cout << "\t" << albumsItr->first << ": " << albumsItr->second.nsongs << endl;
+
+            for (auto songsItr = albumsItr->second.songs.begin(); songsItr != albumsItr->second.songs.end(); ++songsItr) {
+            cout << "\t \t" << songsItr->first << ": " << songsItr->second.title << endl;
+        }
         }
     }
     musicFile.close();
