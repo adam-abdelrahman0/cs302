@@ -72,10 +72,10 @@ int main(int argc, char* argv[]) {
 
     musicFile.open(argv[1]);
 
-    while (!musicFile.eof()) {
+    while (getline(musicFile, line)) {
         Song currentSong;
 
-        getline(musicFile, line);
+        
 
         // get full line from file to split whitespace
         stringstream ss;
@@ -134,7 +134,7 @@ int main(int argc, char* argv[]) {
             cout << "\t" << albumsItr->first << ": " << albumsItr->second.nsongs << ", " << str_time(albumsItr->second.time) << endl;
 
             for (auto songsItr = albumsItr->second.songs.begin(); songsItr != albumsItr->second.songs.end(); ++songsItr) {
-            	cout << "\t \t" << songsItr->first << ": " << songsItr->second.title << " " << songsItr->second.time << endl;
+            	cout << "\t \t" << songsItr->first << ". " << songsItr->second.title << " " << songsItr->second.time << endl;
         	}
         }
     }
