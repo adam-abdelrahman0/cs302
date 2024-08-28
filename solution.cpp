@@ -16,7 +16,7 @@ struct Song {
 };
 
 struct Album {
-    map <string, Song > songs;
+    map <int, Song > songs;
     string name;
     int time;
     int nsongs;
@@ -34,8 +34,8 @@ string str_time(int seconds) {
 	int hours = 0;
 	int minutes = 0;
 
-	hours = seconds / 3600;
-	seconds -= hours * 3600;
+	//hours = seconds / 3600;
+	//seconds -= hours * 3600;
 	minutes = seconds / 60;
 	seconds -= minutes * 60;
 
@@ -57,7 +57,7 @@ string str_time(int seconds) {
 	if (seconds > 0 && minutes == 0 && hours == 0) {
 		time_stream << "0:" << setfill('0') << setw(2) << ss;
 	}
-	else if (seconds > 0){
+	else if (seconds >= 0){
 		time_stream << setfill('0') << setw(2) << ss;
 	}
 
@@ -67,8 +67,8 @@ string str_time(int seconds) {
 
 int main(int argc, char* argv[]) {
     ifstream musicFile;
-    string line, currentLineString, artistName, albumName, songName, trackNum, min, sec;
-	int song_time;
+    string line, currentLineString, artistName, albumName, songName, min, sec;
+	int song_time, trackNum;
 
     vector<Song> tempSongs;
     map<string, Artist> artists;
@@ -113,20 +113,11 @@ int main(int argc, char* argv[]) {
 
         getline(ss, currentLineString, ' ');
         getline(ss, currentLineString, ' ');
-        trackNum = currentLineString;
+        trackNum = stoi(currentLineString);
 
         artists[artistName].albums[albumName].songs[trackNum].title = currentSong.title;
         artists[artistName].albums[albumName].songs[trackNum].time = currentSong.time;
-
-
-//        tempSongs.push_back(currentSong);
     }
-    
-//    for (int i = 0; i < tempSongs.size(); i++) {
-//        cout << tempSongs.at(i).title << " " << tempSongs.at(i).time << endl;
-//    }
-
-//    cout << "\n\n---------- testing structs ----------\n\n" << endl;
     
     for (auto itr = artists.begin(); itr != artists.end(); ++itr) {
         cout << itr->first << ": " << itr->second.nsongs << ", " << str_time(itr->second.time) << endl;
