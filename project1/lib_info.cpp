@@ -34,8 +34,6 @@ string str_time(int seconds) {
 	int hours = 0;
 	int minutes = 0;
 
-	//hours = seconds / 3600;
-	//seconds -= hours * 3600;
 	minutes = seconds / 60;
 	seconds -= minutes * 60;
 
@@ -45,6 +43,9 @@ string str_time(int seconds) {
 
 	stringstream time_stream;
 
+    // time formatting: if minutes is zero, add leading zero to seconds.
+    // if seconds is less than 10, add leading zero inside seconds
+    // if seconds is 0, add two zeroes inside seconds
 	if (hours > 0) {
 		time_stream << setfill('0') << setw(2) << hh << ":";
 	}
@@ -75,6 +76,8 @@ int main(int argc, char* argv[]) {
 
     musicFile.open(argv[1]);
 
+    // read file in line-by-line and parse into 6 regions:
+    // song name, song duration, artist name, album name, genre, and track number
     while (getline(musicFile, line)) {
         Song currentSong;
 
@@ -90,10 +93,9 @@ int main(int argc, char* argv[]) {
 		// song time
         getline(ss, min, ':');
 		getline(ss, sec, ' ');
+
 		//Convert to total seconds
 		song_time = (stoi(sec) + (60 * stoi(min)));
-
-//		cout << song_time << endl;
 
 		currentSong.time = str_time(song_time);
 
@@ -102,7 +104,7 @@ int main(int argc, char* argv[]) {
         replace(artistName.begin(), artistName.end(), '_', ' ');
 
         artists[artistName].name = artistName;
-        artists[artistName].time += song_time;
+        artists[artistName].time += song_time; // add running total song time
         artists[artistName].nsongs++;
 
         getline(ss, albumName, ' ');
@@ -111,18 +113,21 @@ int main(int argc, char* argv[]) {
         artists[artistName].albums[albumName].time += song_time;
         artists[artistName].albums[albumName].nsongs++;
 
-        getline(ss, currentLineString, ' ');
+        getline(ss, currentLineString, ' '); // bypass genre, which is not currently used
         getline(ss, currentLineString, ' ');
         trackNum = stoi(currentLineString);
 
+        // populate song in album map of songs
         artists[artistName].albums[albumName].songs[trackNum].title = currentSong.title;
         artists[artistName].albums[albumName].songs[trackNum].time = currentSong.time;
     }
     
+    // iterate through artist map and print all albums, then interate through album and print all songs
     for (auto itr = artists.begin(); itr != artists.end(); ++itr) {
         cout << itr->first << ": " << itr->second.nsongs << ", " << str_time(itr->second.time) << endl;
 
         for (auto albumsItr = itr->second.albums.begin(); albumsItr != itr->second.albums.end(); ++albumsItr) {
+            // forgot setw() but it worked
             cout << "        " << albumsItr->first << ": " << albumsItr->second.nsongs << ", " << str_time(albumsItr->second.time) << endl;
 
             for (auto songsItr = albumsItr->second.songs.begin(); songsItr != albumsItr->second.songs.end(); ++songsItr) {
