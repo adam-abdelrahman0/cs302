@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
             cout << "        " << albumsItr->first << ": " << albumsItr->second.nsongs << ", " << str_time(albumsItr->second.time) << endl;
 
             for (auto songsItr = albumsItr->second.songs.begin(); songsItr != albumsItr->second.songs.end(); ++songsItr) {
-            	cout << "                " << songsItr->first << ": " << songsItr->second.title << " " << songsItr->second.time << endl;
+            	cout << "                " << songsItr->first << ". " << songsItr->second.title << ": " << songsItr->second.time << endl;
         	}
         }
     }
