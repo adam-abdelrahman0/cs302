@@ -1,1 +1,8 @@
-collaborative folder for project 1. 
+Project 1, COSC 302: Adam Abdelrahman and Andrew Wells
+
+Github handles: adam-abdelrahman0 and WellsAndrew
+repo: https://github.com/adam-abdelrahman0/cs302/tree/main/project1
+
+compile command: g++ -o lib_info project1/lib_info.cpp 
+
+Collaborative folder for Project 1. This project is a music library format that takes in a file and outputs the info as per the lab writeup. We worked well, splitting the outline and implementation well. The majority of this project was getting familiarized with branching and collaborative git, so we bonded by not completely understanding what was happening most of the time.
