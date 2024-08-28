@@ -75,10 +75,8 @@ int main(int argc, char* argv[]) {
 
     musicFile.open(argv[1]);
 
-    while (!musicFile.eof()) {
+    while (getline(musicFile, line)) {
         Song currentSong;
-
-        getline(musicFile, line);
 
         // get full line from file to split whitespace
         stringstream ss;
